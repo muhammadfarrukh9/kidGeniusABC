@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Kid Genius ABC",
+    "slug": "kid-genius-abc",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/app_icon.png",
+    "scheme": "kidgeniusabc",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/images/splash_screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#BFE8FF"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kidgenius.abc"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/app_icon.png",
+        "backgroundColor": "#4f46e5"
+      },
+      "package": "com.kidgenius.abc"
+    },
+    "plugins": [
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash_screen.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#BFE8FF"
+        }
+      ]
+    ]
+  }
+}
