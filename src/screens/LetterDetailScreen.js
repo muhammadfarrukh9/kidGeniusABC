@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -23,11 +24,40 @@ export default function LetterDetailScreen({ navigation, route }) {
   const background = detailBackgrounds[letterIndex % detailBackgrounds.length];
   const examples = letterExamples[letter.id] || [{ word: letter.word, emoji: letter.emoji }];
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [speakingTarget, setSpeakingTarget] = useState(null);
   const selectedExample = examples[selectedIndex] || examples[0];
 
   useEffect(() => {
     setSelectedIndex(0);
+    setSpeakingTarget(null);
+    Speech.stop();
   }, [letter.id]);
+
+  const speakLetter = () => {
+    Speech.stop();
+    setSpeakingTarget("letter");
+    Speech.speak(letter.uppercase, {
+      language: "en-US",
+      pitch: 1.25,
+      rate: 0.72,
+      onDone: () => setSpeakingTarget(null),
+      onStopped: () => setSpeakingTarget(null),
+      onError: () => setSpeakingTarget(null)
+    });
+  };
+
+  const speakWord = () => {
+    Speech.stop();
+    setSpeakingTarget("word");
+    Speech.speak(selectedExample.word, {
+      language: "en-US",
+      pitch: 1.15,
+      rate: 0.82,
+      onDone: () => setSpeakingTarget(null),
+      onStopped: () => setSpeakingTarget(null),
+      onError: () => setSpeakingTarget(null)
+    });
+  };
 
   return (
     <Screen onBack={() => navigation.goBack()} background={background}>
@@ -39,13 +69,27 @@ export default function LetterDetailScreen({ navigation, route }) {
         <Text style={[styles.smallLetter, { color: letter.color }]}>{letter.lowercase}</Text>
       </View>
       <View style={styles.wordBox}>
-        <Pressable style={styles.sound}>
-          <Ionicons name="volume-high" size={28} color="#fff" />
-        </Pressable>
+        <View style={styles.soundSlot}>
+          <Pressable
+            accessibilityLabel={`Say letter ${letter.uppercase}`}
+            style={[styles.sound, speakingTarget === "letter" && styles.soundSpeaking]}
+            onPress={speakLetter}
+          >
+            <Ionicons name={speakingTarget === "letter" ? "volume-high" : "volume-medium-outline"} size={28} color={speakingTarget === "letter" ? "#fff" : theme.colors.primary} />
+            {speakingTarget === "letter" ? <Text style={styles.speakingText}>Speaking</Text> : null}
+          </Pressable>
+        </View>
         <MovingEmoji emoji={selectedExample.emoji} word={selectedExample.word} />
-        <Pressable style={styles.sound}>
-          <Ionicons name="volume-high" size={28} color="#fff" />
-        </Pressable>
+        <View style={styles.soundSlot}>
+          <Pressable
+            accessibilityLabel={`Say ${selectedExample.word}`}
+            style={[styles.sound, speakingTarget === "word" && styles.soundSpeaking]}
+            onPress={speakWord}
+          >
+            <Ionicons name={speakingTarget === "word" ? "volume-high" : "volume-medium-outline"} size={28} color={speakingTarget === "word" ? "#fff" : theme.colors.primary} />
+            {speakingTarget === "word" ? <Text style={styles.speakingText}>Speaking</Text> : null}
+          </Pressable>
+        </View>
       </View>
       <Text style={styles.word}>{selectedExample.word}</Text>
       <View style={styles.cards}>
@@ -166,12 +210,34 @@ const styles = StyleSheet.create({
     marginTop: 18
   },
   sound: {
-    width: 42,
-    height: 42,
-    borderRadius: 22,
-    backgroundColor: theme.colors.secondary,
+    width: 64,
+    height: 50,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.94)",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "rgba(79,70,229,0.18)",
+    shadowColor: "#111827",
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4
+  },
+  soundSlot: {
+    width: 86,
+    alignItems: "center"
+  },
+  soundSpeaking: {
+    width: 86,
+    backgroundColor: theme.colors.secondary,
+    borderColor: "rgba(255,255,255,0.8)"
+  },
+  speakingText: {
+    color: "#fff",
+    fontSize: 9,
+    fontWeight: "900",
+    marginTop: -2
   },
   emoji: {
     fontSize: 118
