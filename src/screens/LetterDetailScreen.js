@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming
+} from "react-native-reanimated";
 import { Screen } from "../components/AppShell";
 import { letterExamples, letters } from "../data/content";
 import { theme } from "../theme";
+
+const detailBackgrounds = ["bg1", "bg2", "bg3", "bg4", "bg5", "bg6", "bg7", "blue"];
 
 export default function LetterDetailScreen({ navigation, route }) {
   const letter = letters.find((item) => item.id === route.params?.letterId) || letters[0];
   const letterIndex = letters.findIndex((item) => item.id === letter.id);
   const previousLetter = letters[(letterIndex - 1 + letters.length) % letters.length];
   const nextLetter = letters[(letterIndex + 1) % letters.length];
+  const background = detailBackgrounds[letterIndex % detailBackgrounds.length];
   const examples = letterExamples[letter.id] || [{ word: letter.word, emoji: letter.emoji }];
-  const mainExample = examples[0];
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedExample = examples[selectedIndex] || examples[0];
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [letter.id]);
 
   return (
-    <Screen onBack={() => navigation.goBack()} background="bg3">
+    <Screen onBack={() => navigation.goBack()} background={background}>
       <Pressable style={styles.homeButton} onPress={() => navigation.navigate("Home")}>
         <Ionicons name="exit-outline" size={24} color={theme.colors.primary} />
       </Pressable>
@@ -26,15 +42,19 @@ export default function LetterDetailScreen({ navigation, route }) {
         <Pressable style={styles.sound}>
           <Ionicons name="volume-high" size={28} color="#fff" />
         </Pressable>
-        <Text style={styles.emoji}>{mainExample.emoji}</Text>
+        <MovingEmoji emoji={selectedExample.emoji} word={selectedExample.word} />
         <Pressable style={styles.sound}>
           <Ionicons name="volume-high" size={28} color="#fff" />
         </Pressable>
       </View>
-      <Text style={styles.word}>{mainExample.word}</Text>
+      <Text style={styles.word}>{selectedExample.word}</Text>
       <View style={styles.cards}>
-        {examples.map((item) => (
-          <Pressable key={item.word} style={styles.card}>
+        {examples.map((item, index) => (
+          <Pressable
+            key={item.word}
+            style={[styles.card, selectedIndex === index && styles.activeCard]}
+            onPress={() => setSelectedIndex(index)}
+          >
             <Text style={styles.cardEmoji}>{item.emoji}</Text>
             <Text style={styles.cardWord}>{item.word}</Text>
           </Pressable>
@@ -50,6 +70,61 @@ export default function LetterDetailScreen({ navigation, route }) {
       </View>
     </Screen>
   );
+}
+
+function MovingEmoji({ emoji, word }) {
+  const progress = useSharedValue(0);
+  const lowerWord = word.toLowerCase();
+  const isVehicleMotion =
+    lowerWord.includes("van") ||
+    lowerWord.includes("train") ||
+    lowerWord.includes("car") ||
+    lowerWord.includes("rocket") ||
+    lowerWord.includes("airplane") ||
+    lowerWord.includes("yacht");
+  const isFloatingMotion =
+    lowerWord.includes("balloon") ||
+    lowerWord.includes("kite") ||
+    lowerWord.includes("bird") ||
+    lowerWord.includes("owl") ||
+    lowerWord.includes("whale") ||
+    lowerWord.includes("fish");
+
+  useEffect(() => {
+    progress.value = 0;
+    if (isVehicleMotion) {
+      progress.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 900, easing: Easing.inOut(Easing.quad) }),
+          withTiming(-1, { duration: 900, easing: Easing.inOut(Easing.quad) })
+        ),
+        -1,
+        true
+      );
+      return;
+    }
+
+    progress.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: isFloatingMotion ? 1100 : 780, easing: Easing.inOut(Easing.quad) }),
+        withTiming(-1, { duration: isFloatingMotion ? 1100 : 780, easing: Easing.inOut(Easing.quad) })
+      ),
+      -1,
+      true
+    );
+  }, [isFloatingMotion, isVehicleMotion, progress, word]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (isVehicleMotion) {
+      return { transform: [{ translateX: progress.value * 48 }, { translateY: Math.abs(progress.value) * -4 }, { rotate: `${progress.value * 2}deg` }] };
+    }
+    if (isFloatingMotion) {
+      return { transform: [{ translateX: progress.value * 18 }, { translateY: Math.abs(progress.value) * -22 }, { rotate: `${progress.value * 4}deg` }] };
+    }
+    return { transform: [{ translateY: Math.abs(progress.value) * -18 }, { scale: 1 + Math.abs(progress.value) * 0.04 }] };
+  });
+
+  return <Animated.Text style={[styles.emoji, animatedStyle]}>{emoji}</Animated.Text>;
 }
 
 const styles = StyleSheet.create({
@@ -123,6 +198,11 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 10,
     alignItems: "center"
+  },
+  activeCard: {
+    borderColor: theme.colors.primary,
+    borderWidth: 3,
+    transform: [{ scale: 1.04 }]
   },
   cardEmoji: {
     fontSize: 34
