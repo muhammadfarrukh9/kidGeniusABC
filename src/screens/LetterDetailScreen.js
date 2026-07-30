@@ -7,11 +7,17 @@ import { theme } from "../theme";
 
 export default function LetterDetailScreen({ navigation, route }) {
   const letter = letters.find((item) => item.id === route.params?.letterId) || letters[0];
+  const letterIndex = letters.findIndex((item) => item.id === letter.id);
+  const previousLetter = letters[(letterIndex - 1 + letters.length) % letters.length];
+  const nextLetter = letters[(letterIndex + 1) % letters.length];
   const examples = letterExamples[letter.id] || [{ word: letter.word, emoji: letter.emoji }];
   const mainExample = examples[0];
 
   return (
     <Screen onBack={() => navigation.goBack()} background="bg3">
+      <Pressable style={styles.homeButton} onPress={() => navigation.navigate("Home")}>
+        <Ionicons name="home" size={24} color="#fff" />
+      </Pressable>
       <View style={styles.topRow}>
         <Text style={[styles.bigLetter, { color: letter.color }]}>{letter.uppercase}</Text>
         <Text style={[styles.smallLetter, { color: letter.color }]}>{letter.lowercase}</Text>
@@ -35,10 +41,10 @@ export default function LetterDetailScreen({ navigation, route }) {
         ))}
       </View>
       <View style={styles.footer}>
-        <Pressable style={styles.circle} onPress={() => navigation.goBack()}>
+        <Pressable style={styles.circle} onPress={() => navigation.replace("LetterDetail", { letterId: previousLetter.id })}>
           <Ionicons name="arrow-back" size={22} color="#fff" />
         </Pressable>
-        <Pressable style={styles.circle} onPress={() => navigation.navigate("Activity", { type: "trace" })}>
+        <Pressable style={styles.circle} onPress={() => navigation.replace("LetterDetail", { letterId: nextLetter.id })}>
           <Ionicons name="arrow-forward" size={22} color="#fff" />
         </Pressable>
       </View>
@@ -47,6 +53,23 @@ export default function LetterDetailScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  homeButton: {
+    position: "absolute",
+    top: 10,
+    left: 0,
+    width: 46,
+    height: 46,
+    borderRadius: 24,
+    backgroundColor: theme.colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
+    shadowColor: "#111827",
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4
+  },
   topRow: {
     flexDirection: "row",
     justifyContent: "center",
