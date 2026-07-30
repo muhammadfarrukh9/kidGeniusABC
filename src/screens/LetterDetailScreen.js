@@ -16,7 +16,7 @@ export default function LetterDetailScreen({ navigation, route }) {
   return (
     <Screen onBack={() => navigation.goBack()} background="bg3">
       <Pressable style={styles.homeButton} onPress={() => navigation.navigate("Home")}>
-        <Ionicons name="home" size={24} color="#fff" />
+        <Ionicons name="exit-outline" size={24} color={theme.colors.primary} />
       </Pressable>
       <View style={styles.topRow}>
         <Text style={[styles.bigLetter, { color: letter.color }]}>{letter.uppercase}</Text>
@@ -55,12 +55,12 @@ export default function LetterDetailScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   homeButton: {
     position: "absolute",
-    top: 10,
-    left: 0,
-    width: 46,
-    height: 46,
-    borderRadius: 24,
-    backgroundColor: theme.colors.primary,
+    top: 42,
+    left: 12,
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.94)",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 2,
