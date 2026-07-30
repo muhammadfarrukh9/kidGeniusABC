@@ -75,8 +75,10 @@ export default function LetterDetailScreen({ navigation, route }) {
             style={[styles.sound, speakingTarget === "letter" && styles.soundSpeaking]}
             onPress={speakLetter}
           >
-            <Ionicons name={speakingTarget === "letter" ? "volume-high" : "volume-medium-outline"} size={28} color={speakingTarget === "letter" ? "#fff" : theme.colors.primary} />
-            {speakingTarget === "letter" ? <Text style={styles.speakingText}>Speaking</Text> : null}
+            <Ionicons name={speakingTarget === "letter" ? "volume-high" : "volume-medium-outline"} size={27} color={speakingTarget === "letter" ? "#fff" : theme.colors.primary} />
+            <Text style={[styles.soundLabel, speakingTarget === "letter" && styles.soundLabelActive]}>
+              {speakingTarget === "letter" ? "Saying" : "Letter"}
+            </Text>
           </Pressable>
         </View>
         <MovingEmoji emoji={selectedExample.emoji} word={selectedExample.word} />
@@ -86,8 +88,10 @@ export default function LetterDetailScreen({ navigation, route }) {
             style={[styles.sound, speakingTarget === "word" && styles.soundSpeaking]}
             onPress={speakWord}
           >
-            <Ionicons name={speakingTarget === "word" ? "volume-high" : "volume-medium-outline"} size={28} color={speakingTarget === "word" ? "#fff" : theme.colors.primary} />
-            {speakingTarget === "word" ? <Text style={styles.speakingText}>Speaking</Text> : null}
+            <Ionicons name={speakingTarget === "word" ? "volume-high" : "volume-medium-outline"} size={27} color={speakingTarget === "word" ? "#fff" : theme.colors.primary} />
+            <Text style={[styles.soundLabel, speakingTarget === "word" && styles.soundLabelActive]}>
+              {speakingTarget === "word" ? "Saying" : "Word"}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -210,34 +214,38 @@ const styles = StyleSheet.create({
     marginTop: 18
   },
   sound: {
-    width: 64,
-    height: 50,
-    borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.94)",
+    width: 74,
+    height: 60,
+    borderRadius: 24,
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "rgba(79,70,229,0.18)",
+    borderWidth: 3,
+    borderColor: "#C7D2FE",
     shadowColor: "#111827",
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6
   },
   soundSlot: {
-    width: 86,
+    width: 92,
     alignItems: "center"
   },
   soundSpeaking: {
     width: 86,
     backgroundColor: theme.colors.secondary,
-    borderColor: "rgba(255,255,255,0.8)"
+    borderColor: "#BBF7D0",
+    transform: [{ scale: 1.06 }]
   },
-  speakingText: {
-    color: "#fff",
-    fontSize: 9,
+  soundLabel: {
+    color: theme.colors.primary,
+    fontSize: 10,
     fontWeight: "900",
-    marginTop: -2
+    marginTop: 1
+  },
+  soundLabelActive: {
+    color: "#fff"
   },
   emoji: {
     fontSize: 118
