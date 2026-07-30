@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     gap: 14,
-    paddingTop: 8,
+    paddingTop: 58,
     paddingBottom: 10
   },
   homeCard: {

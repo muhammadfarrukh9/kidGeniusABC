@@ -2,12 +2,13 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Screen } from "../components/AppShell";
-import { letters } from "../data/content";
+import { letterExamples, letters } from "../data/content";
 import { theme } from "../theme";
 
 export default function LetterDetailScreen({ navigation, route }) {
   const letter = letters.find((item) => item.id === route.params?.letterId) || letters[0];
-  const examples = letters.filter((item) => item.id !== letter.id).slice(0, 3);
+  const examples = letterExamples[letter.id] || [{ word: letter.word, emoji: letter.emoji }];
+  const mainExample = examples[0];
 
   return (
     <Screen onBack={() => navigation.goBack()} background="bg3">
@@ -19,15 +20,15 @@ export default function LetterDetailScreen({ navigation, route }) {
         <Pressable style={styles.sound}>
           <Ionicons name="volume-high" size={28} color="#fff" />
         </Pressable>
-        <Text style={styles.emoji}>{letter.emoji}</Text>
+        <Text style={styles.emoji}>{mainExample.emoji}</Text>
         <Pressable style={styles.sound}>
           <Ionicons name="volume-high" size={28} color="#fff" />
         </Pressable>
       </View>
-      <Text style={styles.word}>{letter.word}</Text>
+      <Text style={styles.word}>{mainExample.word}</Text>
       <View style={styles.cards}>
-        {[letter, ...examples].map((item) => (
-          <Pressable key={item.id} style={styles.card} onPress={() => navigation.navigate("LetterDetail", { letterId: item.id })}>
+        {examples.map((item) => (
+          <Pressable key={item.word} style={styles.card}>
             <Text style={styles.cardEmoji}>{item.emoji}</Text>
             <Text style={styles.cardWord}>{item.word}</Text>
           </Pressable>

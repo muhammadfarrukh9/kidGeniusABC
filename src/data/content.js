@@ -20,6 +20,165 @@ export const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter, index
   ][index]
 }));
 
+export const letterExamples = {
+  A: [
+    { word: "Apple", emoji: "🍎" },
+    { word: "Ant", emoji: "🐜" },
+    { word: "Airplane", emoji: "✈️" },
+    { word: "Alligator", emoji: "🐊" }
+  ],
+  B: [
+    { word: "Balloon", emoji: "🎈" },
+    { word: "Ball", emoji: "⚽" },
+    { word: "Book", emoji: "📘" },
+    { word: "Banana", emoji: "🍌" }
+  ],
+  C: [
+    { word: "Cat", emoji: "🐱" },
+    { word: "Car", emoji: "🚗" },
+    { word: "Cake", emoji: "🎂" },
+    { word: "Crown", emoji: "👑" }
+  ],
+  D: [
+    { word: "Duck", emoji: "🦆" },
+    { word: "Dog", emoji: "🐶" },
+    { word: "Drum", emoji: "🥁" },
+    { word: "Door", emoji: "🚪" }
+  ],
+  E: [
+    { word: "Elephant", emoji: "🐘" },
+    { word: "Egg", emoji: "🥚" },
+    { word: "Envelope", emoji: "✉️" },
+    { word: "Earth", emoji: "🌍" }
+  ],
+  F: [
+    { word: "Fish", emoji: "🐟" },
+    { word: "Flower", emoji: "🌸" },
+    { word: "Fire", emoji: "🔥" },
+    { word: "Frog", emoji: "🐸" }
+  ],
+  G: [
+    { word: "Guitar", emoji: "🎸" },
+    { word: "Grapes", emoji: "🍇" },
+    { word: "Gift", emoji: "🎁" },
+    { word: "Goat", emoji: "🐐" }
+  ],
+  H: [
+    { word: "Hat", emoji: "🎩" },
+    { word: "House", emoji: "🏠" },
+    { word: "Heart", emoji: "❤️" },
+    { word: "Horse", emoji: "🐴" }
+  ],
+  I: [
+    { word: "Igloo", emoji: "🏠" },
+    { word: "Ice", emoji: "🧊" },
+    { word: "Ice Cream", emoji: "🍦" },
+    { word: "Island", emoji: "🏝️" }
+  ],
+  J: [
+    { word: "Juice", emoji: "🧃" },
+    { word: "Jar", emoji: "🫙" },
+    { word: "Jacket", emoji: "🧥" },
+    { word: "Jeans", emoji: "👖" }
+  ],
+  K: [
+    { word: "Kite", emoji: "🪁" },
+    { word: "Key", emoji: "🔑" },
+    { word: "King", emoji: "🤴" },
+    { word: "Kiwi", emoji: "🥝" }
+  ],
+  L: [
+    { word: "Lion", emoji: "🦁" },
+    { word: "Leaf", emoji: "🍃" },
+    { word: "Lamp", emoji: "💡" },
+    { word: "Lemon", emoji: "🍋" }
+  ],
+  M: [
+    { word: "Moon", emoji: "🌙" },
+    { word: "Monkey", emoji: "🐵" },
+    { word: "Milk", emoji: "🥛" },
+    { word: "Music", emoji: "🎵" }
+  ],
+  N: [
+    { word: "Nest", emoji: "🪺" },
+    { word: "Nose", emoji: "👃" },
+    { word: "Net", emoji: "🥅" },
+    { word: "Notebook", emoji: "📓" }
+  ],
+  O: [
+    { word: "Orange", emoji: "🍊" },
+    { word: "Owl", emoji: "🦉" },
+    { word: "Octopus", emoji: "🐙" },
+    { word: "Onion", emoji: "🧅" }
+  ],
+  P: [
+    { word: "Panda", emoji: "🐼" },
+    { word: "Pizza", emoji: "🍕" },
+    { word: "Pencil", emoji: "✏️" },
+    { word: "Penguin", emoji: "🐧" }
+  ],
+  Q: [
+    { word: "Queen", emoji: "👸" },
+    { word: "Quilt", emoji: "🛏️" },
+    { word: "Quiz", emoji: "❓" },
+    { word: "Quarter", emoji: "🪙" }
+  ],
+  R: [
+    { word: "Rocket", emoji: "🚀" },
+    { word: "Rainbow", emoji: "🌈" },
+    { word: "Ring", emoji: "💍" },
+    { word: "Robot", emoji: "🤖" }
+  ],
+  S: [
+    { word: "Sun", emoji: "☀️" },
+    { word: "Star", emoji: "⭐" },
+    { word: "Socks", emoji: "🧦" },
+    { word: "Snake", emoji: "🐍" }
+  ],
+  T: [
+    { word: "Tree", emoji: "🌳" },
+    { word: "Train", emoji: "🚂" },
+    { word: "Tiger", emoji: "🐯" },
+    { word: "Tomato", emoji: "🍅" }
+  ],
+  U: [
+    { word: "Umbrella", emoji: "☂️" },
+    { word: "Unicorn", emoji: "🦄" },
+    { word: "Uniform", emoji: "🎽" },
+    { word: "Up", emoji: "⬆️" }
+  ],
+  V: [
+    { word: "Van", emoji: "🚐" },
+    { word: "Violin", emoji: "🎻" },
+    { word: "Volcano", emoji: "🌋" },
+    { word: "Vest", emoji: "🦺" }
+  ],
+  W: [
+    { word: "Whale", emoji: "🐳" },
+    { word: "Watch", emoji: "⌚" },
+    { word: "Water", emoji: "💧" },
+    { word: "Watermelon", emoji: "🍉" }
+  ],
+  X: [
+    { word: "Xylophone", emoji: "🎼" },
+    { word: "X-ray", emoji: "🩻" },
+    { word: "Xmas Tree", emoji: "🎄" },
+    { word: "X Mark", emoji: "❌" }
+  ],
+  Y: [
+    { word: "Yacht", emoji: "⛵" },
+    { word: "Yo-yo", emoji: "🪀" },
+    { word: "Yarn", emoji: "🧶" },
+    { word: "Yellow", emoji: "🟡" }
+  ],
+  Z: [
+    { word: "Zebra", emoji: "🦓" },
+    { word: "Zoo", emoji: "🦁" },
+    { word: "Zip", emoji: "🤐" },
+    { word: "Zero", emoji: "0️⃣" }
+  ]
+};
+
 export const homeTiles = [
   { title: "Learn ABC", icon: "text", color: "#ef4444", route: "Learn" },
   { title: "Trace Letters", icon: "create", color: "#f59e0b", activity: "trace" },
