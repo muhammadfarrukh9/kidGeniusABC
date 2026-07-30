@@ -1,5 +1,5 @@
-import React from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useMemo, useRef, useState } from "react";
+import { PanResponder, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Canvas, Circle, Group, Path, Skia } from "@shopify/react-native-skia";
 import LottieView from "lottie-react-native";
@@ -9,6 +9,19 @@ import { activities, letters } from "../data/content";
 import { theme } from "../theme";
 
 const tracePath = Skia.Path.MakeFromSVGString("M108 304 L174 88 L240 304 M132 232 L216 232");
+const traceDots = [
+  ["1", 108, 304],
+  ["2", 174, 88],
+  ["3", 240, 304]
+];
+
+function makeStrokePath(points) {
+  const path = Skia.Path.Make();
+  if (!points.length) return path;
+  path.moveTo(points[0].x, points[0].y);
+  points.slice(1).forEach((point) => path.lineTo(point.x, point.y));
+  return path;
+}
 
 export default function ActivityScreen({ navigation, route }) {
   const activity = activities[route.params?.type || "trace"] || activities.trace;
@@ -51,26 +64,75 @@ function ActivityBody({ activity, navigation }) {
 }
 
 function TraceCard({ navigation }) {
+  const [strokes, setStrokes] = useState([]);
+  const [activeStroke, setActiveStroke] = useState([]);
+  const activeStrokeRef = useRef([]);
+  const drawnPaths = useMemo(
+    () => [...strokes, activeStroke].filter((stroke) => stroke.length > 1).map(makeStrokePath),
+    [activeStroke, strokes]
+  );
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: (event) => {
+          const { locationX, locationY } = event.nativeEvent;
+          const nextStroke = [{ x: locationX, y: locationY }];
+          activeStrokeRef.current = nextStroke;
+          setActiveStroke(nextStroke);
+        },
+        onPanResponderMove: (event) => {
+          const { locationX, locationY } = event.nativeEvent;
+          const nextStroke = [...activeStrokeRef.current, { x: locationX, y: locationY }];
+          activeStrokeRef.current = nextStroke;
+          setActiveStroke(nextStroke);
+        },
+        onPanResponderRelease: () => {
+          const finishedStroke = activeStrokeRef.current;
+          setStrokes((items) => (finishedStroke.length > 1 ? [...items, finishedStroke] : items));
+          activeStrokeRef.current = [];
+          setActiveStroke([]);
+        },
+        onPanResponderTerminate: () => {
+          const finishedStroke = activeStrokeRef.current;
+          setStrokes((items) => (finishedStroke.length > 1 ? [...items, finishedStroke] : items));
+          activeStrokeRef.current = [];
+          setActiveStroke([]);
+        }
+      }),
+    []
+  );
+
   return (
-    <View style={styles.centerPanel}>
-      <Canvas style={styles.traceCanvas}>
-        <Group>
-          {tracePath ? <Path path={tracePath} color="#DBEAFE" style="stroke" strokeWidth={48} strokeCap="round" strokeJoin="round" /> : null}
-          {tracePath ? <Path path={tracePath} color={theme.colors.primary} style="stroke" strokeWidth={5} strokeCap="round" strokeJoin="round" /> : null}
-          <Circle cx={108} cy={304} r={12} color={theme.colors.primary} />
-          <Circle cx={174} cy={88} r={12} color={theme.colors.primary} />
-          <Circle cx={240} cy={304} r={12} color={theme.colors.primary} />
-        </Group>
-      </Canvas>
-      {[["1", 102, 30], ["2", 150, 170], ["3", 184, 288]].map(([number, left, top]) => (
-        <View key={number} style={[styles.traceDot, { left, top }]}>
-          <Text style={styles.traceDotText}>{number}</Text>
+    <View style={[styles.centerPanel, styles.tracePanel]}>
+      <View style={styles.traceArea} {...panResponder.panHandlers}>
+        <Canvas style={styles.traceCanvas}>
+          <Group>
+            {tracePath ? <Path path={tracePath} color="#DBEAFE" style="stroke" strokeWidth={48} strokeCap="round" strokeJoin="round" /> : null}
+            {tracePath ? <Path path={tracePath} color={theme.colors.primary} style="stroke" strokeWidth={5} strokeCap="round" strokeJoin="round" /> : null}
+            <Circle cx={108} cy={304} r={12} color={theme.colors.primary} />
+            <Circle cx={174} cy={88} r={12} color={theme.colors.primary} />
+            <Circle cx={240} cy={304} r={12} color={theme.colors.primary} />
+            {drawnPaths.map((path, index) => (
+              <Path key={index} path={path} color={theme.colors.accent} style="stroke" strokeWidth={16} strokeCap="round" strokeJoin="round" />
+            ))}
+          </Group>
+        </Canvas>
+        {traceDots.map(([number, left, top]) => (
+          <View key={number} pointerEvents="none" style={[styles.traceDot, { left: left - 15, top: top - 15 }]}>
+            <Text style={styles.traceDotText}>{number}</Text>
+          </View>
+        ))}
+        <Text style={styles.traceHand}>👆</Text>
+        <View pointerEvents="none" style={styles.traceHint}>
+          <Text style={styles.traceHintText}>Trace here</Text>
         </View>
-      ))}
-      <Text style={styles.traceHand}>👆</Text>
+      </View>
       <View style={styles.row}>
-        <PrimaryButton label="Undo" color={theme.colors.primary} style={styles.rowButton} onPress={() => {}} />
-        <PrimaryButton label="Clear" color={theme.colors.accent} style={styles.rowButton} onPress={() => {}} />
+        <PrimaryButton label="Undo" color={theme.colors.primary} style={styles.rowButton} onPress={() => setStrokes((items) => items.slice(0, -1))} />
+        <PrimaryButton label="Clear" color={theme.colors.accent} style={styles.rowButton} onPress={() => { activeStrokeRef.current = []; setStrokes([]); setActiveStroke([]); }} />
         <PrimaryButton label="Next" color={theme.colors.secondary} style={styles.rowButton} onPress={() => navigation.navigate("Activity", { type: "phonics" })} />
       </View>
     </View>
@@ -281,6 +343,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border
   },
+  tracePanel: {
+    minHeight: 0,
+    paddingVertical: 18,
+    justifyContent: "flex-start"
+  },
+  traceArea: {
+    width: 320,
+    height: 360,
+    alignItems: "center",
+    justifyContent: "center"
+  },
   traceCanvas: {
     width: 320,
     height: 340
@@ -296,12 +369,13 @@ const styles = StyleSheet.create({
   },
   traceDot: {
     position: "absolute",
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: theme.colors.primary,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    zIndex: 3
   },
   traceDotText: {
     color: "#fff",
@@ -309,15 +383,30 @@ const styles = StyleSheet.create({
   },
   traceHand: {
     position: "absolute",
-    fontSize: 54,
+    fontSize: 42,
     right: 34,
-    top: 190
+    top: 126,
+    zIndex: 2
+  },
+  traceHint: {
+    position: "absolute",
+    left: 22,
+    top: 16,
+    backgroundColor: "#EEF2FF",
+    borderRadius: 18,
+    paddingHorizontal: 12,
+    paddingVertical: 6
+  },
+  traceHintText: {
+    color: theme.colors.primary,
+    fontWeight: "900",
+    fontSize: 12
   },
   row: {
     width: "100%",
     flexDirection: "row",
     gap: 10,
-    marginTop: 18
+    marginTop: 12
   },
   rowButton: {
     flex: 1
