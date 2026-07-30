@@ -11,9 +11,9 @@
       "**/*"
     ],
     "splash": {
-      "image": "./assets/images/splash_screen.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#BFE8FF"
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": true,
@@ -31,10 +31,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash_screen.png",
-          "imageWidth": 220,
-          "resizeMode": "contain",
-          "backgroundColor": "#BFE8FF"
+          "image": "./assets/images/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#FFFFFF"
         }
       ]
     ]

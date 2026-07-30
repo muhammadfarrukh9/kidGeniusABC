@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { onboarding } from "../data/content";
 import { PrimaryButton } from "../components/AppShell";
@@ -16,15 +16,9 @@ export default function OnboardingScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={[theme.colors.sky, theme.colors.card]} style={styles.container}>
-      <ImageBackground source={backgrounds.onboarding} resizeMode="cover" style={styles.background}>
+    <LinearGradient colors={[theme.colors.sky, theme.colors.sky]} style={styles.container}>
+      <ImageBackground source={backgrounds.onboarding} resizeMode="stretch" style={styles.background} imageStyle={styles.backgroundImage}>
         <View style={styles.content}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.subtitle}>{item.subtitle}</Text>
-          <View style={styles.artBox}>
-            <Text style={[styles.artwork, page === 1 && styles.traceLetter]}>{item.artwork}</Text>
-            {page === 1 ? <Text style={styles.hand}>👆</Text> : null}
-          </View>
           <PrimaryButton label={item.cta} onPress={next} color={page === 2 ? theme.colors.secondary : theme.colors.primary} />
           <View style={styles.dots}>
             {onboarding.map((entry, index) => (
@@ -43,46 +37,15 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "flex-end"
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%"
   },
   content: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 26,
-    backgroundColor: "rgba(255,255,255,0.1)"
-  },
-  title: {
-    color: theme.colors.text,
-    fontSize: 27,
-    lineHeight: 34,
-    fontWeight: "900",
-    textAlign: "center"
-  },
-  subtitle: {
-    color: theme.colors.text,
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: "700",
-    marginTop: 14
-  },
-  artBox: {
-    height: 330,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  artwork: {
-    fontSize: 76,
-    textAlign: "center"
-  },
-  traceLetter: {
-    fontSize: 210,
-    color: theme.colors.primary,
-    fontWeight: "900"
-  },
-  hand: {
-    fontSize: 54,
-    marginTop: -72,
-    marginLeft: 130
+    paddingHorizontal: 26,
+    paddingBottom: 30
   },
   dots: {
     height: 32,

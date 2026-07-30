@@ -34,22 +34,29 @@ export default function BottomNav({ navigation }) {
 
 const styles = StyleSheet.create({
   nav: {
-    height: 62,
-    borderTopColor: theme.colors.border,
-    borderTopWidth: 1,
+    height: 76,
+    borderColor: "rgba(199,210,254,0.9)",
+    borderWidth: 1,
+    borderRadius: 24,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: theme.colors.card,
-    paddingBottom: 4
+    paddingHorizontal: 8,
+    shadowColor: "#111827",
+    shadowOpacity: 0.14,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 7 },
+    elevation: 5
   },
   item: {
     flex: 1,
     alignItems: "center",
-    gap: 3
+    justifyContent: "center",
+    gap: 4
   },
   label: {
-    color: theme.colors.text,
-    fontSize: 11,
-    fontWeight: "800"
+    color: theme.colors.primary,
+    fontSize: 12,
+    fontWeight: "900"
   }
 });

@@ -11,7 +11,7 @@ export default function SplashScreen({ navigation }) {
 
   return (
     <LinearGradient colors={[theme.colors.sky, theme.colors.card]} style={styles.container}>
-      <Image source={require("../../assets/images/splash_screen.png")} style={styles.splashImage} resizeMode="contain" />
+      <Image source={require("../../assets/images/splash.png")} style={styles.splashImage} resizeMode="contain" />
       <Text style={styles.loading}>Loading...</Text>
     </LinearGradient>
   );
